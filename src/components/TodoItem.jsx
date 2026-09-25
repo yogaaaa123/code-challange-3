@@ -10,12 +10,14 @@ function TodoItem({ todo, onToggle, onDelete }) {
         type="checkbox"
         checked={completed}
         onChange={() => onToggle(id)}
+        aria-label={`Mark "${text}" as ${completed ? 'active' : 'completed'}`}
       />
       <span>{text}</span>
       <button
         type="button"
         className="delete-btn"
         onClick={() => onDelete(id)}
+        aria-label={`Delete "${text}"`}
       >
         Delete
       </button>

@@ -64,7 +64,12 @@ function App() {
       <h1>My Todo List</h1>
       
       <div className="input-section">
+        {/* A real label keeps the field accessible to screen readers */}
+        <label className="visually-hidden" htmlFor="new-todo">
+          New todo
+        </label>
         <input
+          id="new-todo"
           type="text"
           value={input}
           onChange={handleInputChange}
@@ -74,7 +79,7 @@ function App() {
         <button type="button" onClick={addTodo}>Add</button>
       </div>
       
-      <div className="filters">
+      <div className="filters" role="group" aria-label="Filter todos">
         {FILTERS.map(value => (
           <button
             key={value}
@@ -82,6 +87,7 @@ function App() {
             data-filter={value}
             className={filter === value ? 'filter-btn filter-btn--active' : 'filter-btn'}
             onClick={handleFilterChange}
+            aria-pressed={filter === value}
           >
             {FILTER_LABELS[value]}
           </button>
