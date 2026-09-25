@@ -40,6 +40,15 @@ h1 {
   font-size: 13px;
 }
 
+.error-boundary {
+  text-align: center;
+}
+
+.error-boundary p {
+  margin-bottom: 20px;
+  color: #666;
+}
+
 .filters {
   display: flex;
   gap: 10px;
