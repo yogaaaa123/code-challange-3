@@ -15,8 +15,7 @@ function App() {
   useEffect(() => {
     saveTodos(todos)
   }, [todos])
-  
-  // Issue 5: Function yang tidak di-memoize, re-create setiap render
+
   const addTodo = useCallback(() => {
     const text = input.trim()
 
@@ -69,7 +68,7 @@ function App() {
   return (
     <div className="app">
       <h1>My Todo List</h1>
-      
+
       <div className="input-section">
         {/* A real label keeps the field accessible to screen readers */}
         <label className="visually-hidden" htmlFor="new-todo">
@@ -93,7 +92,7 @@ function App() {
           {validationError}
         </p>
       )}
-      
+
       <div className="filters" role="group" aria-label="Filter todos">
         {FILTERS.map(value => (
           <button
@@ -108,7 +107,7 @@ function App() {
           </button>
         ))}
       </div>
-      
+
       {visibleTodos.length === 0 ? (
         <p className="empty-state">
           {todos.length === 0
