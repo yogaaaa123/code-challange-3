@@ -47,12 +47,14 @@ re-rendered every row).
 - Empty list and empty filter result had no text: added an empty state.
 - Added `:focus-visible` outlines for keyboard users.
 - Colour contrast: an axe-core 4.10.2 audit (WCAG 2.1 A/AA) reported one
-  serious violation with three nodes (active filter button, completed row text
-  and the delete button inside a completed row). Buttons now use #0069d9 and
-  #1e7e34, and completed rows use a grey text colour instead of `opacity: 0.6`,
-  which was dimming everything inside the row. `src/index.contrast.test.js`
-  computes the ratios from `index.css` so a later colour change cannot silently
-  drop below 4.5:1. After the fix the same audit reports no violations.
+  serious violation with six nodes (the add button, the filter buttons, the
+  completed row text and the delete button inside a completed row). Buttons now
+  use #0069d9 and #1e7e34, and completed rows use a grey text colour instead of
+  `opacity: 0.6`, which was dimming everything inside the row.
+  `src/index.contrast.test.js` computes the ratios from `index.css` so a later
+  colour change cannot silently drop below 4.5:1. Re-injecting the original
+  palette into the page makes the same audit report those six nodes again, and
+  with the current stylesheet it reports no violations (21 rules pass).
 
 ## Developer experience
 
@@ -91,8 +93,9 @@ re-rendered every row).
   text rendered inert, unique UUID ids, no console errors. The error boundary
   was exercised by temporarily throwing from a row: fallback shown, app stayed
   mounted, and clearing storage plus "Try again" recovered the app.
-- axe-core 4.10.2 (WCAG 2.1 A/AA) reports no violations. Note for anyone
-  re-running it: the test browser has Dark Reader installed, which rewrites
-  computed colours, so contrast was also checked numerically.
+- axe-core 4.10.2 (WCAG 2.1 A/AA) reports no violations, 21 rules pass, with
+  Dark Reader disabled so the browser reports the real colours. This browser did
+  have Dark Reader enabled during the first audit, so the ratios are also
+  checked numerically by `src/index.contrast.test.js`.
 - Not verifiable here: live-region announcements with a real screen reader, and
   pnpm 9, which needs a `packages:` field in `pnpm-workspace.yaml`.
