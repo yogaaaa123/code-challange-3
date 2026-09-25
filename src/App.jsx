@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import TodoItem from './components/TodoItem'
 import { loadTodos, saveTodos } from './utils/storage'
-import { createTodo, filterTodos, getTodoStats } from './utils/todo'
+import { FILTERS, FILTER_LABELS, createTodo, filterTodos, getTodoStats } from './utils/todo'
 
 function App() {
   // Reading storage in the initializer means the first render already shows the
@@ -39,7 +39,12 @@ function App() {
   const visibleTodos = filterTodos(todos, filter)
   const stats = getTodoStats(todos)
 
-  // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
+  // One shared handler reads the target filter from the button itself, so the
+  // buttons below do not need a new arrow function on every render.
+  const handleFilterChange = (event) => {
+    setFilter(event.currentTarget.dataset.filter)
+  }
+
   return (
     <div className="app">
       <h1>My Todo List</h1>
@@ -61,27 +66,17 @@ function App() {
       </div>
       
       <div className="filters">
-        <button
-          type="button"
-          className={filter === 'all' ? 'filter-btn filter-btn--active' : 'filter-btn'}
-          onClick={() => setFilter('all')}
-        >
-          All
-        </button>
-        <button
-          type="button"
-          className={filter === 'active' ? 'filter-btn filter-btn--active' : 'filter-btn'}
-          onClick={() => setFilter('active')}
-        >
-          Active
-        </button>
-        <button
-          type="button"
-          className={filter === 'completed' ? 'filter-btn filter-btn--active' : 'filter-btn'}
-          onClick={() => setFilter('completed')}
-        >
-          Completed
-        </button>
+        {FILTERS.map(value => (
+          <button
+            key={value}
+            type="button"
+            data-filter={value}
+            className={filter === value ? 'filter-btn filter-btn--active' : 'filter-btn'}
+            onClick={handleFilterChange}
+          >
+            {FILTER_LABELS[value]}
+          </button>
+        ))}
       </div>
       
       <div className="todo-list">

@@ -1,3 +1,11 @@
+export const FILTERS = ['all', 'active', 'completed']
+
+export const FILTER_LABELS = {
+  all: 'All',
+  active: 'Active',
+  completed: 'Completed',
+}
+
 // crypto.randomUUID is available in every modern browser (and in Node), but the
 // fallback keeps older environments working.
 function createTodoId() {
