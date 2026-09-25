@@ -96,6 +96,12 @@ button:focus-visible {
   list-style: none;
 }
 
+.empty-state {
+  padding: 12px 0;
+  color: #666;
+  font-size: 14px;
+}
+
 .todo-item {
   display: flex;
   align-items: center;

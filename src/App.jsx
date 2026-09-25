@@ -94,19 +94,26 @@ function App() {
         ))}
       </div>
       
-      {/* A real list lets screen readers announce the number of items */}
-      <ul className="todo-list">
-        {/* Issue 13: Tidak ada handling untuk empty state */}
-        {visibleTodos.map((todo) => (
-          // Stable, unique keys keep React from reusing the wrong row
-          <TodoItem
-            key={todo.id}
-            todo={todo}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
-          />
-        ))}
-      </ul>
+      {visibleTodos.length === 0 ? (
+        <p className="empty-state">
+          {todos.length === 0
+            ? 'No todos yet. Add your first task above.'
+            : `No ${FILTER_LABELS[filter].toLowerCase()} todos.`}
+        </p>
+      ) : (
+        // A real list lets screen readers announce the number of items
+        <ul className="todo-list">
+          {visibleTodos.map((todo) => (
+            // Stable, unique keys keep React from reusing the wrong row
+            <TodoItem
+              key={todo.id}
+              todo={todo}
+              onToggle={toggleTodo}
+              onDelete={deleteTodo}
+            />
+          ))}
+        </ul>
+      )}
 
       {/* role="status" announces stats changes politely */}
       <div className="stats" role="status">
