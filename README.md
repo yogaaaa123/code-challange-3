@@ -90,4 +90,10 @@ All existing tests must pass after your refactoring.
 5. Implement fixes with atomic commits
 6. Verify all tests still pass
 
+## Audit Results
+
+The issues found during this assessment, their impact and the fix for each one
+are documented in [refactor/AUDIT.md](./refactor/AUDIT.md). Every fix is a
+separate commit; `pnpm test` covers the behaviour (48 tests).
+
 Good luck! 🚀
