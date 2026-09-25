@@ -1,2 +1,9 @@
+# pnpm refuses to run the esbuild install script unless it is explicitly
+# approved, and `pnpm install`/`pnpm test` abort with ERR_PNPM_IGNORED_BUILDS
+# when that approval is missing. `allowBuilds` is the pnpm 11+ spelling,
+# `onlyBuiltDependencies` the pnpm 10 one, so both are listed.
 allowBuilds:
-  esbuild: set this to true or false
+  esbuild: true
+
+onlyBuiltDependencies:
+  - esbuild
