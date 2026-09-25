@@ -46,6 +46,13 @@ re-rendered every row).
 - Stats line: now a `role="status"` region so changes are announced.
 - Empty list and empty filter result had no text: added an empty state.
 - Added `:focus-visible` outlines for keyboard users.
+- Colour contrast: an axe-core 4.10.2 audit (WCAG 2.1 A/AA) reported one
+  serious violation with three nodes (active filter button, completed row text
+  and the delete button inside a completed row). Buttons now use #0069d9 and
+  #1e7e34, and completed rows use a grey text colour instead of `opacity: 0.6`,
+  which was dimming everything inside the row. `src/index.contrast.test.js`
+  computes the ratios from `index.css` so a later colour change cannot silently
+  drop below 4.5:1. After the fix the same audit reports no violations.
 
 ## Developer experience
 
@@ -71,3 +78,21 @@ re-rendered every row).
 - The `todos` localStorage key and stored todo shape stay backward compatible.
 - Cross-tab synchronisation (`storage` events) and server-side sanitisation
   were out of scope: the app is client-only and no HTML is ever produced.
+
+## How this was verified
+
+- `pnpm test` (66 tests) and `pnpm build` pass, including from a fresh clone
+  with `pnpm install --frozen-lockfile` on pnpm 10 and pnpm 11.
+- Mutation checks: restoring `dangerouslySetInnerHTML` fails the two security
+  tests; making the row handlers unstable brings back 6 row re-renders for 3
+  keystrokes (measured with a temporary render counter, 0 with the fix).
+- Real browser (Firefox, dev server and production preview): add, toggle,
+  delete, filter, empty state, inline validation, reload persistence, hostile
+  text rendered inert, unique UUID ids, no console errors. The error boundary
+  was exercised by temporarily throwing from a row: fallback shown, app stayed
+  mounted, and clearing storage plus "Try again" recovered the app.
+- axe-core 4.10.2 (WCAG 2.1 A/AA) reports no violations. Note for anyone
+  re-running it: the test browser has Dark Reader installed, which rewrites
+  computed colours, so contrast was also checked numerically.
+- Not verifiable here: live-region announcements with a real screen reader, and
+  pnpm 9, which needs a `packages:` field in `pnpm-workspace.yaml`.
