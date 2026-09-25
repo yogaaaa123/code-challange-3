@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import TodoItem from './components/TodoItem'
 import { loadTodos, saveTodos } from './utils/storage'
 import { createTodo, filterTodos, getTodoStats } from './utils/todo'
 
@@ -84,22 +85,13 @@ function App() {
       <div className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
         {visibleTodos.map((todo) => (
-          // Issue 14: Key menggunakan index bisa lebih baik dengan ID
-          <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            <input 
-              type="checkbox"
-              checked={todo.completed}
-              onChange={() => toggleTodo(todo.id)}
-            />
-            {/* Text is rendered as text so user input can never execute markup */}
-            <span>{todo.text}</span>
-            <button 
-              className="delete-btn"
-              onClick={() => deleteTodo(todo.id)}
-            >
-              Delete
-            </button>
-          </div>
+          // Stable, unique keys keep React from reusing the wrong row
+          <TodoItem
+            key={todo.id}
+            todo={todo}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+          />
         ))}
       </div>
       
