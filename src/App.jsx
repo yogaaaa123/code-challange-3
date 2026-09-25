@@ -121,8 +121,8 @@ function App() {
               checked={todo.completed}
               onChange={() => toggleTodo(todo.id)}
             />
-            {/* Issue 15: Potential XSS jika text dari user input */}
-            <span dangerouslySetInnerHTML={{ __html: todo.text }} />
+            {/* Text is rendered as text so user input can never execute markup */}
+            <span>{todo.text}</span>
             <button 
               className="delete-btn"
               onClick={() => deleteTodo(todo.id)}
