@@ -22,10 +22,15 @@ function App() {
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('all')
 
-  // Issue 4: useEffect yang terlalu sering run
+  // Persist only when the list actually changes; writing in a non-private
+  // browser mode can still fail (quota, disabled storage), so guard it.
   useEffect(() => {
-    localStorage.setItem('todos', JSON.stringify(todos))
-  })
+    try {
+      localStorage.setItem('todos', JSON.stringify(todos))
+    } catch (error) {
+      console.error('Could not save todos:', error)
+    }
+  }, [todos])
   
   // Issue 5: Function yang tidak di-memoize, re-create setiap render
   const addTodo = () => {
