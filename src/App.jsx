@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import TodoItem from './components/TodoItem'
 import { loadTodos, saveTodos } from './utils/storage'
 import { FILTERS, FILTER_LABELS, createTodo, filterTodos, getTodoStats } from './utils/todo'
@@ -16,36 +16,37 @@ function App() {
   }, [todos])
   
   // Issue 5: Function yang tidak di-memoize, re-create setiap render
-  const addTodo = () => {
+  const addTodo = useCallback(() => {
     if (input.trim() === '') {
       alert('Please enter a todo')
       return
     }
 
-    setTodos([...todos, createTodo(input)])
+    // Functional updates keep this callback independent of the current todos.
+    setTodos(previousTodos => [...previousTodos, createTodo(input)])
     setInput('')
-  }
+  }, [input])
 
-  const handleInputChange = (event) => {
+  const handleInputChange = useCallback((event) => {
     setInput(event.target.value)
-  }
+  }, [])
 
   // onKeyPress is deprecated and never fires for every key on some keyboards.
-  const handleInputKeyDown = (event) => {
+  const handleInputKeyDown = useCallback((event) => {
     if (event.key === 'Enter') {
       addTodo()
     }
-  }
+  }, [addTodo])
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id))
-  }
+  const deleteTodo = useCallback((id) => {
+    setTodos(previousTodos => previousTodos.filter(todo => todo.id !== id))
+  }, [])
 
-  const toggleTodo = (id) => {
-    setTodos(todos.map(todo =>
+  const toggleTodo = useCallback((id) => {
+    setTodos(previousTodos => previousTodos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
-  }
+  }, [])
 
   // Filtering and counting walk the whole list, and both only change when the
   // todos or the filter do, so they are recomputed only when that happens.
@@ -54,9 +55,9 @@ function App() {
 
   // One shared handler reads the target filter from the button itself, so the
   // buttons below do not need a new arrow function on every render.
-  const handleFilterChange = (event) => {
+  const handleFilterChange = useCallback((event) => {
     setFilter(event.currentTarget.dataset.filter)
-  }
+  }, [])
 
   return (
     <div className="app">
