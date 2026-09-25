@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { loadTodos, saveTodos } from './utils/storage'
+import { createTodo, filterTodos, getTodoStats } from './utils/todo'
 
 function App() {
   // Reading storage in the initializer means the first render already shows the
@@ -19,48 +20,24 @@ function App() {
       alert('Please enter a todo')
       return
     }
-    
-    // Issue 6: Menggunakan Date.now() sebagai ID (bisa collision)
-    const newTodo = {
-      id: Date.now(),
-      text: input,
-      completed: false,
-      createdAt: new Date().toISOString()
-    }
-    
-    setTodos([...todos, newTodo])
+
+    setTodos([...todos, createTodo(input)])
     setInput('')
   }
-  
-  // Issue 7: Tidak ada error handling
+
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id))
   }
-  
+
   const toggleTodo = (id) => {
-    setTodos(todos.map(todo => 
+    setTodos(todos.map(todo =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ))
   }
-  
-  // Issue 8: Logic filtering yang bisa dipindah ke useMemo
-  const getFilteredTodos = () => {
-    if (filter === 'active') {
-      return todos.filter(todo => !todo.completed)
-    }
-    if (filter === 'completed') {
-      return todos.filter(todo => todo.completed)
-    }
-    return todos
-  }
-  
-  // Issue 9: Calculation yang tidak perlu di setiap render
-  const stats = {
-    total: todos.length,
-    completed: todos.filter(t => t.completed).length,
-    active: todos.filter(t => !t.completed).length
-  }
-  
+
+  const visibleTodos = filterTodos(todos, filter)
+  const stats = getTodoStats(todos)
+
   // Issue 10: Inline event handler dengan arrow function (re-create setiap render)
   return (
     <div className="app">
@@ -106,7 +83,7 @@ function App() {
       
       <div className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
-        {getFilteredTodos().map((todo) => (
+        {visibleTodos.map((todo) => (
           // Issue 14: Key menggunakan index bisa lebih baik dengan ID
           <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
             <input 
