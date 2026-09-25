@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import TodoItem from './components/TodoItem'
 import { loadTodos, saveTodos } from './utils/storage'
 import { FILTERS, FILTER_LABELS, createTodo, filterTodos, getTodoStats } from './utils/todo'
@@ -47,8 +47,10 @@ function App() {
     ))
   }
 
-  const visibleTodos = filterTodos(todos, filter)
-  const stats = getTodoStats(todos)
+  // Filtering and counting walk the whole list, and both only change when the
+  // todos or the filter do, so they are recomputed only when that happens.
+  const visibleTodos = useMemo(() => filterTodos(todos, filter), [todos, filter])
+  const stats = useMemo(() => getTodoStats(todos), [todos])
 
   // One shared handler reads the target filter from the button itself, so the
   // buttons below do not need a new arrow function on every render.
