@@ -48,4 +48,22 @@ describe('accessibility', () => {
 
     expect(screen.getByRole('group', { name: 'Filter todos' })).toBeInTheDocument()
   })
+
+  it('renders the todos as a list', () => {
+    render(<App />)
+    addTodo('Buy milk')
+    addTodo('Walk the dog')
+
+    expect(screen.getByRole('list')).toBeInTheDocument()
+    expect(screen.getAllByRole('listitem')).toHaveLength(2)
+  })
+
+  it('exposes the stats as a live status region', () => {
+    render(<App />)
+    addTodo('Buy milk')
+
+    const status = screen.getByRole('status')
+    expect(status).toHaveTextContent('Total: 1')
+    expect(status).toHaveTextContent('Active: 1')
+  })
 })

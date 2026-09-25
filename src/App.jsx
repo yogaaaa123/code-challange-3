@@ -94,7 +94,8 @@ function App() {
         ))}
       </div>
       
-      <div className="todo-list">
+      {/* A real list lets screen readers announce the number of items */}
+      <ul className="todo-list">
         {/* Issue 13: Tidak ada handling untuk empty state */}
         {visibleTodos.map((todo) => (
           // Stable, unique keys keep React from reusing the wrong row
@@ -105,9 +106,10 @@ function App() {
             onDelete={deleteTodo}
           />
         ))}
-      </div>
-      
-      <div className="stats">
+      </ul>
+
+      {/* role="status" announces stats changes politely */}
+      <div className="stats" role="status">
         <p>Total: {stats.total} | Active: {stats.active} | Completed: {stats.completed}</p>
       </div>
     </div>

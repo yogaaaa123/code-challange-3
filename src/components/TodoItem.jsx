@@ -5,7 +5,7 @@ function TodoItem({ todo, onToggle, onDelete }) {
   const { id, text, completed } = todo
 
   return (
-    <div className={`todo-item${completed ? ' completed' : ''}`}>
+    <li className={`todo-item${completed ? ' completed' : ''}`}>
       <input
         type="checkbox"
         checked={completed}
@@ -21,7 +21,7 @@ function TodoItem({ todo, onToggle, onDelete }) {
       >
         Delete
       </button>
-    </div>
+    </li>
   )
 }
 

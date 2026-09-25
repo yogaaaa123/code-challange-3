@@ -92,6 +92,10 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+.todo-list {
+  list-style: none;
+}
+
 .todo-item {
   display: flex;
   align-items: center;
