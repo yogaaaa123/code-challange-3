@@ -93,7 +93,7 @@ All existing tests must pass after your refactoring.
 ## Audit Results
 
 The issues found during this assessment, their impact and the fix for each one
-are documented in [refactor/AUDIT.md](./refactor/AUDIT.md). Every fix is a
+are documented in [AUDIT.md](./AUDIT.md). Every fix is a
 separate commit; `pnpm test` covers the behaviour (48 tests).
 
 Good luck! 🚀
