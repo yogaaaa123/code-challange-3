@@ -1,35 +1,16 @@
 import { useState, useEffect } from 'react'
-
-// Reading storage in the initializer means the first render already has the
-// saved todos, so no effect has to restore them (and corrupt data is handled).
-function loadStoredTodos() {
-  try {
-    const saved = localStorage.getItem('todos')
-    if (!saved) {
-      return []
-    }
-
-    const parsed = JSON.parse(saved)
-    return Array.isArray(parsed) ? parsed : []
-  } catch (error) {
-    console.error('Could not read saved todos:', error)
-    return []
-  }
-}
+import { loadTodos, saveTodos } from './utils/storage'
 
 function App() {
-  const [todos, setTodos] = useState(loadStoredTodos)
+  // Reading storage in the initializer means the first render already shows the
+  // saved todos, so no effect has to restore them.
+  const [todos, setTodos] = useState(loadTodos)
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('all')
 
-  // Persist only when the list actually changes; writing in a non-private
-  // browser mode can still fail (quota, disabled storage), so guard it.
+  // Persist only when the list actually changes.
   useEffect(() => {
-    try {
-      localStorage.setItem('todos', JSON.stringify(todos))
-    } catch (error) {
-      console.error('Could not save todos:', error)
-    }
+    saveTodos(todos)
   }, [todos])
   
   // Issue 5: Function yang tidak di-memoize, re-create setiap render
