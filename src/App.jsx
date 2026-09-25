@@ -26,6 +26,17 @@ function App() {
     setInput('')
   }
 
+  const handleInputChange = (event) => {
+    setInput(event.target.value)
+  }
+
+  // onKeyPress is deprecated and never fires for every key on some keyboards.
+  const handleInputKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      addTodo()
+    }
+  }
+
   const deleteTodo = (id) => {
     setTodos(todos.filter(todo => todo.id !== id))
   }
@@ -49,20 +60,15 @@ function App() {
     <div className="app">
       <h1>My Todo List</h1>
       
-      {/* Issue 11: Tidak ada label untuk accessibility */}
       <div className="input-section">
-        <input 
+        <input
           type="text"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === 'Enter') {
-              addTodo()
-            }
-          }}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
           placeholder="What needs to be done?"
         />
-        <button onClick={addTodo}>Add</button>
+        <button type="button" onClick={addTodo}>Add</button>
       </div>
       
       <div className="filters">
