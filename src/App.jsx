@@ -9,6 +9,7 @@ function App() {
   const [todos, setTodos] = useState(loadTodos)
   const [input, setInput] = useState('')
   const [filter, setFilter] = useState('all')
+  const [validationError, setValidationError] = useState('')
 
   // Persist only when the list actually changes.
   useEffect(() => {
@@ -17,18 +18,24 @@ function App() {
   
   // Issue 5: Function yang tidak di-memoize, re-create setiap render
   const addTodo = useCallback(() => {
-    if (input.trim() === '') {
-      alert('Please enter a todo')
+    const text = input.trim()
+
+    if (text === '') {
+      // A blocking alert() is not announced as a field error; an inline
+      // message is both visible and read out by assistive technology.
+      setValidationError('Please enter a todo')
       return
     }
 
     // Functional updates keep this callback independent of the current todos.
-    setTodos(previousTodos => [...previousTodos, createTodo(input)])
+    setTodos(previousTodos => [...previousTodos, createTodo(text)])
     setInput('')
+    setValidationError('')
   }, [input])
 
   const handleInputChange = useCallback((event) => {
     setInput(event.target.value)
+    setValidationError('')
   }, [])
 
   // onKeyPress is deprecated and never fires for every key on some keyboards.
@@ -75,9 +82,17 @@ function App() {
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
           placeholder="What needs to be done?"
+          aria-invalid={validationError !== ''}
+          aria-describedby={validationError ? 'new-todo-error' : undefined}
         />
         <button type="button" onClick={addTodo}>Add</button>
       </div>
+
+      {validationError !== '' && (
+        <p className="validation-error" id="new-todo-error" role="alert">
+          {validationError}
+        </p>
+      )}
       
       <div className="filters" role="group" aria-label="Filter todos">
         {FILTERS.map(value => (

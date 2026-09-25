@@ -34,6 +34,12 @@ h1 {
   margin-bottom: 20px;
 }
 
+.validation-error {
+  margin-bottom: 20px;
+  color: #dc3545;
+  font-size: 13px;
+}
+
 .filters {
   display: flex;
   gap: 10px;
